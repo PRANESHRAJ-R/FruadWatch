@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Holder Login - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/}">Fraud<span>Watch</span> Bank</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a class="active" th:href="@{/login/account}">Account Holder Login</a></li>
+                <li><a th:href="@{/register}">Open Account</a></li>
+                <li><a th:href="@{/login/admin}">Admin Login</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">Account Holder Login</h1>
+        <a class="btn btn-secondary" th:href="@{/}">&larr; Back to Home</a>
+    </div>
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card" style="max-width: 480px; margin: 0 auto;">
+        <h2>Login to Your Account</h2>
+        <form th:action="@{/login/account}" method="post">
+            <div class="form-group">
+                <label for="accountNumber">Account Number</label>
+                <input type="text" id="accountNumber" name="accountNumber" class="form-control" placeholder="e.g. ACC1001" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password / PIN</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-actions" style="justify-content: space-between; align-items: center;">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a th:href="@{/register}" class="btn btn-secondary btn-sm">New Account? Register</a>
+            </div>
+        </form>
+
+        <div style="margin-top: 25px; padding: 12px; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; font-size: 0.85rem; color: #64748b;">
+            <strong>Demo Accounts Available:</strong><br>
+            • Account: <code>ACC1001</code> | PIN: <code>123</code> (Balance: $100,000)<br>
+            • Account: <code>ACC1002</code> | PIN: <code>123</code> (Balance: $50,000)<br>
+            • Account: <code>ACC1003</code> | PIN: <code>123</code> (Balance: $75,000)
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

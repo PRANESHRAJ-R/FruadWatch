@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Rule - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/}">Fraud<span>Watch</span></a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/flagged}">Flagged Transactions</a></li>
+                <li><a class="active" th:href="@{/rules}">Rules</a></li>
+                <li><a class="nav-btn" th:href="@{/transactions/new}">+ New Transaction</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">Add Fraud Detection Rule</h1>
+        <a class="btn btn-secondary" th:href="@{/rules}">Back to Rules</a>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card" style="max-width: 600px; margin: 0 auto;">
+        <h2>Rule Configuration</h2>
+        <form th:action="@{/rules}" th:object="${rule}" method="post">
+            <div class="form-group">
+                <label for="name">Rule Name *</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="e.g. High Value Anomaly" required>
+                <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="ruleType">Rule Type *</label>
+                <select id="ruleType" th:field="*{ruleType}" class="form-control" onchange="toggleRuleFields()">
+                    <option value="AMOUNT_THRESHOLD">AMOUNT_THRESHOLD (Unusually Large Amount)</option>
+                    <option value="VELOCITY">VELOCITY (Rapid Repeated Transactions)</option>
+                </select>
+                <div class="field-error" th:if="${#fields.hasErrors('ruleType')}" th:errors="*{ruleType}"></div>
+            </div>
+
+            <div id="amountSection" class="form-group">
+                <label for="thresholdAmount">Threshold Amount *</label>
+                <input type="number" step="0.01" id="thresholdAmount" th:field="*{thresholdAmount}" class="form-control" placeholder="e.g. 50000.00">
+                <div class="form-text">Transactions strictly greater than this amount will be flagged.</div>
+                <div class="field-error" th:if="${#fields.hasErrors('thresholdAmount')}" th:errors="*{thresholdAmount}"></div>
+            </div>
+
+            <div id="velocitySection" style="display: none;">
+                <div class="form-group">
+                    <label for="transactionCount">Threshold Transaction Count *</label>
+                    <input type="number" id="transactionCount" th:field="*{transactionCount}" class="form-control" placeholder="e.g. 3">
+                    <div class="form-text">Flag transaction if total count from sender exceeds this number.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('transactionCount')}" th:errors="*{transactionCount}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeWindowMinutes">Time Window (Minutes) *</label>
+                    <input type="number" id="timeWindowMinutes" th:field="*{timeWindowMinutes}" class="form-control" placeholder="e.g. 10">
+                    <div class="form-text">Time window in minutes to monitor sender transactions.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('timeWindowMinutes')}" th:errors="*{timeWindowMinutes}"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="enabled" th:field="*{enabled}">
+                    <label for="enabled" style="margin-bottom: 0;">Rule Enabled</label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Rule</button>
+                <a th:href="@{/rules}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+    function toggleRuleFields() {
+        const type = document.getElementById('ruleType').value;
+        const amountSection = document.getElementById('amountSection');
+        const velocitySection = document.getElementById('velocitySection');
+
+        if (type === 'AMOUNT_THRESHOLD') {
+            amountSection.style.display = 'block';
+            velocitySection.style.display = 'none';
+        } else if (type === 'VELOCITY') {
+            amountSection.style.display = 'none';
+            velocitySection.style.display = 'block';
+        }
+    }
+    // initialize on load
+    document.addEventListener('DOMContentLoaded', toggleRuleFields);
+</script>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Review Queue - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/admin/dashboard}">Fraud<span>Watch</span> Admin</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/admin/accounts}">Account Holders</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a class="active" th:href="@{/flagged}">Flagged Queue</a></li>
+                <li><a th:href="@{/rules}">Fraud Rules</a></li>
+                <li><a th:href="@{/logout}" class="btn btn-secondary btn-sm">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">Suspicious Transactions — Manual Review Queue</h1>
+    </div>
+
+    <!-- Flash message alerts -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${warningMessage}" class="alert alert-warning" th:text="${warningMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card">
+        <h2>Transactions Flagged by Anomaly Engine</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th>Flag ID</th>
+                    <th>Tx ID</th>
+                    <th>Amount</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Flagged At</th>
+                    <th>Triggered Rule(s)</th>
+                    <th>Review Status</th>
+                    <th>Reviewed At</th>
+                    <th>Admin Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(flaggedList)}">
+                    <td colspan="10" class="empty-state">No flagged transactions in review queue.</td>
+                </tr>
+                <tr th:each="flagged : ${flaggedList}">
+                    <td th:text="'#' + ${flagged.id}">#1</td>
+                    <td th:text="'#' + ${flagged.transaction.id}">#1</td>
+                    <td style="font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(flagged.transaction.amount, 1, 'COMMA', 2, 'POINT')}">$50,000.00</td>
+                    <td th:text="${flagged.transaction.senderAccount}">ACC1</td>
+                    <td th:text="${flagged.transaction.receiverAccount}">ACC2</td>
+                    <td th:text="${#temporals.format(flagged.flaggedAt, 'yyyy-MM-dd HH:mm:ss')}">2026-09-30 15:30:00</td>
+                    <td>
+                        <span th:each="rule : ${flagged.triggeredRules}" class="rule-pill" th:text="${rule.name}">Rule</span>
+                    </td>
+                    <td>
+                        <span th:if="${flagged.reviewStatus.name() == 'PENDING'}" class="badge badge-pending">PENDING</span>
+                        <span th:if="${flagged.reviewStatus.name() == 'APPROVED'}" class="badge badge-approved">APPROVED</span>
+                        <span th:if="${flagged.reviewStatus.name() == 'BLOCKED'}" class="badge badge-blocked">BLOCKED / FRAUD</span>
+                    </td>
+                    <td>
+                        <span th:if="${flagged.reviewedAt != null}" th:text="${#temporals.format(flagged.reviewedAt, 'yyyy-MM-dd HH:mm:ss')}">2026-09-30 15:35:00</span>
+                        <span th:if="${flagged.reviewedAt == null}" style="color: #94a3b8;">—</span>
+                    </td>
+                    <td>
+                        <div th:if="${flagged.reviewStatus.name() == 'PENDING'}">
+                            <form th:action="@{'/flagged/' + ${flagged.id} + '/approve'}" method="post" class="action-form">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form th:action="@{'/flagged/' + ${flagged.id} + '/block'}" method="post" class="action-form">
+                                <button type="submit" class="btn btn-danger btn-sm" title="Report as fraud and block">Report Fraud</button>
+                            </form>
+                        </div>
+                        <span th:unless="${flagged.reviewStatus.name() == 'PENDING'}" style="color: #64748b; font-size: 0.85rem;">Completed</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

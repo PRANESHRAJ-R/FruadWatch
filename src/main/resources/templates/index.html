@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Fraud Watch Bank</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .role-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+        .role-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-top: 5px solid #2563eb;
+        }
+        .role-card.admin-card {
+            border-top-color: #7c3aed;
+        }
+        .role-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        .role-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .role-desc {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .role-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .hero-banner {
+            text-align: center;
+            padding: 40px 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .hero-banner h1 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        .hero-banner p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/}">Fraud<span>Watch</span> Bank</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/login/account}">Account Holder Login</a></li>
+                <li><a th:href="@{/register}">Open Account</a></li>
+                <li><a th:href="@{/login/admin}">Admin Portal</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="hero-banner">
+        <h1>Fraud Watch Banking & Anomaly Flagging System</h1>
+        <p>Please select your login role to proceed to the system</p>
+    </div>
+
+    <div class="role-container">
+        <!-- Account Holder Card -->
+        <div class="role-card">
+            <div>
+                <div class="role-icon">&#128179;</div>
+                <div class="role-title">Account Holder</div>
+                <p class="role-desc">
+                    Login to view your bank balance, transfer money to other account holders, and track your sent and received transaction history.
+                </p>
+            </div>
+            <div class="role-actions">
+                <a th:href="@{/login/account}" class="btn btn-primary" style="text-align: center;">Login as Account Holder</a>
+                <a th:href="@{/register}" class="btn btn-secondary" style="text-align: center;">Open New Bank Account</a>
+            </div>
+        </div>
+
+        <!-- Admin Card -->
+        <div class="role-card admin-card">
+            <div>
+                <div class="role-icon">&#128737;</div>
+                <div class="role-title">Bank Administrator</div>
+                <p class="role-desc">
+                    Manage bank account holders, monitor transaction flows in real-time, inspect suspicious transactions in the review queue, and report or block fraud.
+                </p>
+            </div>
+            <div class="role-actions">
+                <a th:href="@{/login/admin}" class="btn btn-primary" style="text-align: center; background-color: #7c3aed;">Login as Admin</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

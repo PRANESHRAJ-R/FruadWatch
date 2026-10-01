@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Rules - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/admin/dashboard}">Fraud<span>Watch</span> Admin</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/admin/accounts}">Account Holders</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/flagged}">Flagged Queue</a></li>
+                <li><a class="active" th:href="@{/rules}">Fraud Rules</a></li>
+                <li><a th:href="@{/logout}" class="btn btn-secondary btn-sm">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">Fraud Detection Rules Configuration</h1>
+        <a class="btn btn-primary" th:href="@{/rules/new}">+ Add Rule</a>
+    </div>
+
+    <!-- Flash message alerts -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Configuration</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(rules)}">
+                    <td colspan="6" class="empty-state">No rules configured.</td>
+                </tr>
+                <tr th:each="r : ${rules}">
+                    <td th:text="'#' + ${r.id}">#1</td>
+                    <td style="font-weight: 500;" th:text="${r.name}">Large Amount Rule</td>
+                    <td>
+                        <span class="rule-pill" th:text="${r.ruleType}">AMOUNT_THRESHOLD</span>
+                    </td>
+                    <td>
+                        <span th:if="${r.ruleType.name() == 'AMOUNT_THRESHOLD'}">
+                            Threshold: &gt; <strong th:text="'$' + ${#numbers.formatDecimal(r.thresholdAmount, 1, 'COMMA', 2, 'POINT')}">$50,000.00</strong>
+                        </span>
+                        <span th:if="${r.ruleType.name() == 'VELOCITY'}">
+                            &gt; <strong th:text="${r.transactionCount}">3</strong> transactions within <strong th:text="${r.timeWindowMinutes}">10</strong> min
+                        </span>
+                    </td>
+                    <td>
+                        <span th:if="${r.enabled}" class="badge badge-enabled">ENABLED</span>
+                        <span th:unless="${r.enabled}" class="badge badge-disabled">DISABLED</span>
+                    </td>
+                    <td>
+                        <a th:href="@{'/rules/' + ${r.id} + '/edit'}" class="btn btn-secondary btn-sm">Edit</a>
+                        <form th:action="@{'/rules/' + ${r.id} + '/toggle'}" method="post" class="action-form">
+                            <button th:if="${r.enabled}" type="submit" class="btn btn-danger btn-sm">Disable</button>
+                            <button th:unless="${r.enabled}" type="submit" class="btn btn-success btn-sm">Enable</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

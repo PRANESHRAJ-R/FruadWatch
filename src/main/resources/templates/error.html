@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/}">Fraud<span>Watch</span></a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/flagged}">Flagged Transactions</a></li>
+                <li><a th:href="@{/rules}">Rules</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="content-card" style="max-width: 600px; margin: 40px auto; text-align: center;">
+        <h2 style="color: #dc2626; margin-bottom: 16px;">Action Could Not Be Completed</h2>
+        <div class="alert alert-danger" style="text-align: left; margin-bottom: 24px;" th:text="${errorMessage}">
+            An error occurred while processing your request.
+        </div>
+        <div>
+            <a href="javascript:history.back()" class="btn btn-secondary" style="margin-right: 10px;">&larr; Go Back</a>
+            <a th:href="@{/dashboard}" class="btn btn-primary">Return to Dashboard</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

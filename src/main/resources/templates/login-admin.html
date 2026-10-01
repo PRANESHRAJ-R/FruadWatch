@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/}">Fraud<span>Watch</span> Bank</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/login/account}">Account Holder Login</a></li>
+                <li><a class="active" th:href="@{/login/admin}">Admin Portal</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">Bank Administrator Login</h1>
+        <a class="btn btn-secondary" th:href="@{/}">&larr; Back to Home</a>
+    </div>
+
+    <!-- Error Alert -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card" style="max-width: 480px; margin: 0 auto; border-top: 4px solid #7c3aed;">
+        <h2>Admin Authentication</h2>
+        <form th:action="@{/login/admin}" method="post">
+            <div class="form-group">
+                <label for="username">Admin Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="admin" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="admin" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" style="background-color: #7c3aed;">Login as Admin</button>
+                <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+
+        <div style="margin-top: 25px; padding: 12px; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; font-size: 0.85rem; color: #64748b;">
+            <strong>Default Credentials:</strong><br>
+            • Username: <code>admin</code><br>
+            • Password: <code>admin</code>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

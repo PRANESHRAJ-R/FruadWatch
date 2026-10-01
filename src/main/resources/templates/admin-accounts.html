@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Account Holders - Admin Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/admin/dashboard}">Fraud<span>Watch</span> Admin</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li><a class="active" th:href="@{/admin/accounts}">Account Holders</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/flagged}">Flagged Queue</a></li>
+                <li><a th:href="@{/rules}">Fraud Rules</a></li>
+                <li><a th:href="@{/logout}" class="btn btn-secondary btn-sm">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">Registered Bank Account Holders</h1>
+        <a class="btn btn-primary" th:href="@{/register}">+ New Account Holder</a>
+    </div>
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card">
+        <h2>Bank Accounts Directory</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Account Number</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Current Balance</th>
+                    <th>Registered At</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(accounts)}">
+                    <td colspan="6" class="empty-state">No bank account holders found.</td>
+                </tr>
+                <tr th:each="acc : ${accounts}">
+                    <td th:text="'#' + ${acc.id}">#1</td>
+                    <td>
+                        <strong style="color: #0284c7;" th:text="${acc.accountNumber}">ACC1001</strong>
+                    </td>
+                    <td style="font-weight: 500;" th:text="${acc.fullName}">John Doe</td>
+                    <td th:text="${acc.email}">john@example.com</td>
+                    <td style="font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(acc.balance, 1, 'COMMA', 2, 'POINT')}">$10,000.00</td>
+                    <td th:text="${#temporals.format(acc.createdAt, 'yyyy-MM-dd HH:mm')}">2026-09-30 15:30</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Transactions - Fraud Watch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <a class="brand" th:href="@{/admin/dashboard}">Fraud<span>Watch</span> Admin</a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/admin/accounts}">Account Holders</a></li>
+                <li><a class="active" th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/flagged}">Flagged Queue</a></li>
+                <li><a th:href="@{/rules}">Fraud Rules</a></li>
+                <li><a th:href="@{/logout}" class="btn btn-secondary btn-sm">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">All System Transactions</h1>
+        <a class="btn btn-primary" th:href="@{/transactions/new}">+ Record Transaction</a>
+    </div>
+
+    <!-- Flash message alerts -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${warningMessage}" class="alert alert-warning" th:text="${warningMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="content-card">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Amount</th>
+                    <th>Sender Account</th>
+                    <th>Receiver Account</th>
+                    <th>Timestamp</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(transactions)}">
+                    <td colspan="6" class="empty-state">No transactions have been recorded yet.</td>
+                </tr>
+                <tr th:each="tx : ${transactions}">
+                    <td th:text="'#' + ${tx.id}">#1</td>
+                    <td style="font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 2, 'POINT')}">$1,000.00</td>
+                    <td th:text="${tx.senderAccount}">ACC-001</td>
+                    <td th:text="${tx.receiverAccount}">ACC-002</td>
+                    <td th:text="${#temporals.format(tx.timestamp, 'yyyy-MM-dd HH:mm:ss')}">2026-09-30 15:30:00</td>
+                    <td>
+                        <span th:if="${tx.status.name() == 'COMPLETED'}" class="badge badge-completed">COMPLETED</span>
+                        <span th:if="${tx.status.name() == 'PENDING_REVIEW'}" class="badge badge-pending-review">PENDING REVIEW</span>
+                        <span th:if="${tx.status.name() == 'BLOCKED'}" class="badge badge-blocked">BLOCKED / FRAUD</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Fraud Watch — Basic Transaction Anomaly Flagging System</p>
+</footer>
+</body>
+</html>
